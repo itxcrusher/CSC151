@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BinarySearchTree.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Your Project Name</a> &gt; <a href="index.source.html" class="el_package">student</a> &gt; <span class="el_source">BinarySearchTree.java</span></div><h1>BinarySearchTree.java</h1><pre class="source lang-java linenums">package student;
+
+/**
+ * A generic binary search tree (BST) implementation that stores elements of type T.
+ *
+ * Invariants:
+ * 1. For any node N, all elements in N's left subtree are less than N's key.
+ * 2. For any node N, all elements in N's right subtree are greater than N's key.
+ * 3. The tree does not contain duplicate elements.
+ *
+ * @author Ali Hamza
+ * @version 11/11/2024
+ *
+ * @param &lt;T&gt; the type of elements stored in the BST, which must implement Comparable&lt;T&gt;
+ */
+public class BinarySearchTree&lt;T extends Comparable&lt;T&gt;&gt; {
+
+    private BSTNode&lt;T&gt; root;
+
+    /**
+     * Default constructor that creates an empty BST.
+     */
+<span class="fc" id="L23">    public BinarySearchTree() {</span>
+<span class="fc" id="L24">        root = null;</span>
+<span class="fc" id="L25">    }</span>
+
+    /**
+     * Inserts a new value into this BST.
+     *
+     * @param newValue the value to insert
+     */
+    public void insert(T newValue) {
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (newValue == null) {</span>
+<span class="fc" id="L34">            throw new IllegalArgumentException(&quot;Cannot insert null into the tree.&quot;);</span>
+        }
+<span class="fc" id="L36">        root = insert(root, newValue);</span>
+<span class="fc" id="L37">    }</span>
+
+    /**
+     * Recursive helper method to insert a value into the tree rooted at subroot.
+     *
+     * @param subroot the root of the subtree to insert into
+     * @param value   the value to insert
+     * @return the root of the subtree after insertion
+     */
+    private BSTNode&lt;T&gt; insert(BSTNode&lt;T&gt; subroot, T value) {
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (subroot == null) {</span>
+<span class="fc" id="L48">            return new BSTNode&lt;&gt;(value);</span>
+        }
+<span class="fc" id="L50">        int comparison = value.compareTo(subroot.key);</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (comparison &lt; 0) {</span>
+<span class="fc" id="L52">            subroot.llink = insert(subroot.llink, value);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        } else if (comparison &gt; 0) {</span>
+<span class="fc" id="L54">            subroot.rlink = insert(subroot.rlink, value);</span>
+        }
+<span class="fc" id="L56">        return subroot;</span>
+    }
+
+    /**
+     * Deletes a value from the BST. If the value is not present, the tree remains unchanged.
+     *
+     * @param value the value to delete
+     */
+    public void delete(T value) {
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (value == null) {</span>
+<span class="fc" id="L66">            throw new IllegalArgumentException(&quot;Cannot delete null from the tree.&quot;);</span>
+        }
+<span class="fc" id="L68">        root = delete(root, value);</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Recursive helper method to delete a value from the tree rooted at subroot.
+     *
+     * @param subroot the root of the subtree to delete from
+     * @param value   the value to delete
+     * @return the root of the subtree after deletion
+     */
+    private BSTNode&lt;T&gt; delete(BSTNode&lt;T&gt; subroot, T value) {
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (subroot == null) {</span>
+<span class="fc" id="L80">            return null;</span>
+        }
+<span class="fc" id="L82">        int comparison = value.compareTo(subroot.key);</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (comparison &lt; 0) {</span>
+<span class="fc" id="L84">            subroot.llink = delete(subroot.llink, value);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        } else if (comparison &gt; 0) {</span>
+<span class="fc" id="L86">            subroot.rlink = delete(subroot.rlink, value);</span>
+        } else {
+<span class="fc bfc" id="L88" title="All 2 branches covered.">            if (subroot.isLeaf()) {</span>
+<span class="fc" id="L89">                return null;</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">            } else if (subroot.hasLeftChildOnly()) {</span>
+<span class="fc" id="L91">                return subroot.llink;</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">            } else if (subroot.hasRightChildOnly()) {</span>
+<span class="fc" id="L93">                return subroot.rlink;</span>
+            } else {
+<span class="fc" id="L95">                BSTNode&lt;T&gt; largest = findLargest(subroot.llink);</span>
+<span class="fc" id="L96">                subroot.key = largest.key;</span>
+<span class="fc" id="L97">                subroot.llink = delete(subroot.llink, largest.key);</span>
+            }
+        }
+<span class="fc" id="L100">        return subroot;</span>
+    }
+
+    /**
+     * Finds the largest node in the subtree rooted at subroot.
+     *
+     * @param node the root of the subtree
+     * @return the node with the largest value in the subtree
+     */
+    private BSTNode&lt;T&gt; findLargest(BSTNode&lt;T&gt; node) {
+<span class="fc" id="L110">        BSTNode&lt;T&gt; current = node;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        while (current.rlink != null) {</span>
+<span class="fc" id="L112">            current = current.rlink;</span>
+        }
+<span class="fc" id="L114">        return current;</span>
+    }
+
+    /**
+     * Searches for a target value in the BST.
+     *
+     * @param target the value to search for
+     * @return true if the target is found, false otherwise
+     */
+    public boolean search(T target) {
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (target == null) {</span>
+<span class="fc" id="L125">            throw new IllegalArgumentException(&quot;Cannot search for null in the tree.&quot;);</span>
+        }
+<span class="fc" id="L127">        return search(root, target);</span>
+    }
+
+    /**
+     * Recursive helper method to search for a target value in the subtree rooted at subroot.
+     *
+     * @param subroot the root of the subtree to search in
+     * @param target  the value to search for
+     * @return true if the target is found, false otherwise
+     */
+    private boolean search(BSTNode&lt;T&gt; subroot, T target) {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (subroot == null) {</span>
+<span class="fc" id="L139">            return false;</span>
+        }
+<span class="fc" id="L141">        int comparison = target.compareTo(subroot.key);</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        if (comparison == 0) {</span>
+<span class="fc" id="L143">            return true;</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        } else if (comparison &lt; 0) {</span>
+<span class="fc" id="L145">            return search(subroot.llink, target);</span>
+        } else {
+<span class="fc" id="L147">            return search(subroot.rlink, target);</span>
+        }
+    }
+
+    /**
+     * Finds and returns the object in the tree that equals the target.
+     *
+     * @param target the object to find
+     * @return the object in the tree that equals the target, or null if not found
+     */
+    public T find(T target) {
+<span class="fc bfc" id="L158" title="All 2 branches covered.">        if (target == null) {</span>
+<span class="fc" id="L159">            throw new IllegalArgumentException(&quot;Cannot find null in the tree.&quot;);</span>
+        }
+<span class="fc" id="L161">        return find(root, target);</span>
+    }
+
+    private T find(BSTNode&lt;T&gt; node, T target) {
+<span class="fc bfc" id="L165" title="All 2 branches covered.">        if (node == null) {</span>
+<span class="fc" id="L166">            return null;</span>
+        }
+<span class="fc" id="L168">        int comparison = target.compareTo(node.key);</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        if (comparison == 0) {</span>
+<span class="fc" id="L170">            return node.key;</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        } else if (comparison &lt; 0) {</span>
+<span class="fc" id="L172">            return find(node.llink, target);</span>
+        } else {
+<span class="fc" id="L174">            return find(node.rlink, target);</span>
+        }
+    }
+
+    /**
+     * Returns a string representation of the BST in the format:
+     * (left subtree) value (right subtree)
+     *
+     * @return the string representation of the BST
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L186">        return toString(root);</span>
+    }
+
+    /**
+     * Recursive helper method for toString().
+     *
+     * @param node the root of the subtree to convert to a string
+     * @return the string representation of the subtree
+     */
+    private String toString(BSTNode&lt;T&gt; node) {
+<span class="fc" id="L196">        String ret = &quot;&quot;;</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        if (node != null) {</span>
+<span class="fc" id="L198">            ret += &quot;(&quot;;</span>
+<span class="fc" id="L199">            ret += toString(node.llink);</span>
+<span class="fc" id="L200">            ret += &quot; &quot; + node.key + &quot; &quot;;</span>
+<span class="fc" id="L201">            ret += toString(node.rlink);</span>
+<span class="fc" id="L202">            ret += &quot;)&quot;;</span>
+        }
+<span class="fc" id="L204">        return ret;</span>
+    }
+
+    /**
+     * Performs an in-order traversal of the BST
+     * and returns a string with each element on a new line.
+     *
+     * @return the string representation of the BST in-order
+     */
+    public String inOrderTraversal() {
+<span class="fc" id="L214">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L215">        inOrderTraversal(root, sb);</span>
+<span class="fc" id="L216">        return sb.toString();</span>
+    }
+
+    /**
+     * Recursive helper method for in-order traversal.
+     *
+     * @param node the current node
+     * @param sb   the StringBuilder to accumulate the output
+     */
+    private void inOrderTraversal(BSTNode&lt;T&gt; node, StringBuilder sb) {
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        if (node != null) {</span>
+<span class="fc" id="L227">            inOrderTraversal(node.llink, sb);</span>
+<span class="fc" id="L228">            sb.append(node.key.toString()).append(&quot;\n&quot;);</span>
+<span class="fc" id="L229">            inOrderTraversal(node.rlink, sb);</span>
+        }
+<span class="fc" id="L231">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

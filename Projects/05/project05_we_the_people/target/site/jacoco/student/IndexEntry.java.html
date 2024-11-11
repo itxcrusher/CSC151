@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IndexEntry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Your Project Name</a> &gt; <a href="index.source.html" class="el_package">student</a> &gt; <span class="el_source">IndexEntry.java</span></div><h1>IndexEntry.java</h1><pre class="source lang-java linenums">package student;
+
+/**
+ * Represents an entry in the index, containing a word and its associated pagelist.
+ *
+ * Invariants:
+ * 1. The word is a non-null String.
+ * 2. The pagelist is non-null and manages the pages where the word appears.
+ *
+ * @author Ali Hamza
+ * @version 11/11/2024
+ */
+public class IndexEntry implements Comparable&lt;IndexEntry&gt; {
+    /**
+     * The word being indexed.
+     */
+    private String word;
+
+    /**
+     * The pagelist associated with the word.
+     */
+    private Pagelist pagelist;
+
+    /**
+     * Constructs an IndexEntry with the specified word.
+     *
+     * @param word the word to index
+     * @throws IllegalArgumentException if the word is null
+     */
+<span class="fc" id="L30">    public IndexEntry(String word) {</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (word == null) {</span>
+<span class="fc" id="L32">            throw new IllegalArgumentException(&quot;Word cannot be null.&quot;);</span>
+        }
+<span class="fc" id="L34">        this.word = word;</span>
+<span class="fc" id="L35">        this.pagelist = new Pagelist();</span>
+<span class="fc" id="L36">    }</span>
+
+    /**
+     * Adds a page number to the pagelist if possible.
+     *
+     * @param pageNumber the page number to add
+     * @return true if the page number was added, false otherwise
+     */
+    public boolean addPage(int pageNumber) {
+<span class="fc" id="L45">        return pagelist.addPage(pageNumber);</span>
+    }
+
+    /**
+     * Checks if the pagelist contains the specified page number.
+     *
+     * @param pageNumber the page number to check
+     * @return true if the page number is in the pagelist, false otherwise
+     */
+    public boolean hasPage(int pageNumber) {
+<span class="fc" id="L55">        return pagelist.contains(pageNumber);</span>
+    }
+
+    /**
+     * Checks if the pagelist is full.
+     *
+     * @return true if the pagelist is full, false otherwise
+     */
+    public boolean isFull() {
+<span class="fc" id="L64">        return pagelist.isFull();</span>
+    }
+
+    /**
+     * Returns the word associated with this IndexEntry.
+     *
+     * @return the word
+     */
+    public String getWord() {
+<span class="fc" id="L73">        return word;</span>
+    }
+
+    /**
+     * Returns the pagelist associated with this IndexEntry.
+     *
+     * @return the pagelist
+     */
+    public Pagelist getPagelist() {
+<span class="fc" id="L82">        return pagelist;</span>
+    }
+
+    /**
+     * Compares this IndexEntry with another based on the word, preserving case.
+     * Ordering is based on ASCII values, so uppercase letters come before lowercase letters.
+     *
+     * @param other the other IndexEntry to compare with
+     * @return a negative integer, zero, or a positive integer as this word is less than,
+     * equal to, or greater than the specified word
+     */
+    @Override
+    public int compareTo(IndexEntry other) {
+<span class="fc" id="L95">        return this.word.compareTo(other.word);</span>
+    }
+
+    /**
+     * Checks if this IndexEntry is equal to another object.
+     *
+     * @param obj the reference object with which to compare
+     * @return true if this object is equal to the obj argument; false otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        if (this == obj)</span>
+<span class="fc" id="L107">            return true;</span>
+<span class="fc bfc" id="L108" title="All 4 branches covered.">        if (obj == null || getClass() != obj.getClass())</span>
+<span class="fc" id="L109">            return false;</span>
+<span class="fc" id="L110">        IndexEntry other = (IndexEntry) obj;</span>
+<span class="fc" id="L111">        return word.equals(other.word);</span>
+    }
+
+    /**
+     * Returns a hash code value for the object.
+     *
+     * @return the hash code value
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L121">        return word.hashCode();</span>
+    }
+
+    /**
+     * Returns a string representation of the IndexEntry in the format &quot;word: {pageList}&quot;.
+     *
+     * @return the string representation of this IndexEntry
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L131">        return word + &quot; &quot; + pagelist.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

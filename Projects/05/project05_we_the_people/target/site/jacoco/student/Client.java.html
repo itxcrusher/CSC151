@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Client.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Your Project Name</a> &gt; <a href="index.source.html" class="el_package">student</a> &gt; <span class="el_source">Client.java</span></div><h1>Client.java</h1><pre class="source lang-java linenums">package student;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+/**
+ * Driver for the index maker project
+ *
+ * @author Ali Hamza
+ * @version 11/11/2024
+ * I affirm that I have carried out the attached academic endeavors with full academic honesty,
+ * in accordance with the Union College Honor Code and the course syllabus.
+ */
+<span class="nc" id="L15">public class Client {</span>
+
+    public static void main(String[] args) {
+<span class="nc" id="L18">        makeIndex(&quot;input.txt&quot;);</span>
+        // makeIndex(&quot;usconst.txt&quot;);
+<span class="nc" id="L20">    }</span>
+
+    /**
+     * Makes an index out of fileName.
+     *
+     * @param fileName path to text file that you want to index
+     */
+    public static void makeIndex(String fileName) {
+<span class="nc" id="L28">        BinarySearchTree&lt;IndexEntry&gt; index = new BinarySearchTree&lt;&gt;();</span>
+<span class="nc" id="L29">        BinarySearchTree&lt;String&gt; dictionary = new BinarySearchTree&lt;&gt;();</span>
+<span class="nc" id="L30">        int currentPage = 1;</span>
+
+        try {
+<span class="nc" id="L33">            File inputFile = new File(fileName);</span>
+<span class="nc" id="L34">            Scanner scanner = new Scanner(inputFile);</span>
+<span class="nc" id="L35">            scanner.useDelimiter(&quot;[^A-Za-z#]+&quot;);</span>
+
+<span class="nc bnc" id="L37" title="All 2 branches missed.">            while (scanner.hasNext()) {</span>
+<span class="nc" id="L38">                String token = scanner.next();</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">                if (token.equals(&quot;#&quot;)) {</span>
+<span class="nc" id="L40">                    currentPage++;</span>
+                } else {
+<span class="nc" id="L42">                    processWord(token, currentPage, index, dictionary);</span>
+                }
+<span class="nc" id="L44">            }</span>
+<span class="nc" id="L45">            scanner.close();</span>
+
+<span class="nc" id="L47">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L48">            System.err.println(&quot;File not found: &quot; + fileName);</span>
+<span class="nc" id="L49">            return;</span>
+<span class="nc" id="L50">        }</span>
+
+<span class="nc" id="L52">        System.out.println(&quot;\nIndex:&quot;);</span>
+<span class="nc" id="L53">        System.out.println(&quot;====================&quot;);</span>
+<span class="nc" id="L54">        System.out.print(index.inOrderTraversal());</span>
+
+<span class="nc" id="L56">        System.out.println(&quot;\nDictionary:&quot;);</span>
+<span class="nc" id="L57">        System.out.println(&quot;====================&quot;);</span>
+<span class="nc" id="L58">        System.out.print(dictionary.inOrderTraversal());</span>
+<span class="nc" id="L59">    }</span>
+
+    /**
+     * Handles the logic for processing each word encountered in the file.
+     *
+     * @param word        the word to process
+     * @param currentPage the current page number
+     * @param index       the binary search tree for storing IndexEntry objects
+     * @param dictionary  the binary search tree for storing dictionary words
+     */
+    private static void processWord(String word, int currentPage,
+                                    BinarySearchTree&lt;IndexEntry&gt; index,
+                                    BinarySearchTree&lt;String&gt; dictionary) {
+
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (word.length() &lt;= 2) {</span>
+<span class="nc" id="L74">            return;</span>
+        }
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (dictionary.search(word)) {</span>
+<span class="nc" id="L78">            return;</span>
+        }
+
+<span class="nc" id="L81">        IndexEntry foundEntry = index.find(new IndexEntry(word));</span>
+
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (foundEntry != null) {</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (!foundEntry.hasPage(currentPage)) {</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                if (foundEntry.isFull()) {</span>
+<span class="nc" id="L86">                    System.out.println(&quot;Deleting '&quot; + foundEntry.toString() + &quot;' from index.&quot;);</span>
+<span class="nc" id="L87">                    index.delete(foundEntry);</span>
+<span class="nc" id="L88">                    dictionary.insert(word);</span>
+                } else {
+<span class="nc" id="L90">                    foundEntry.addPage(currentPage);</span>
+                }
+            }
+        } else {
+<span class="nc" id="L94">            IndexEntry newEntry = new IndexEntry(word);</span>
+<span class="nc" id="L95">            newEntry.addPage(currentPage);</span>
+<span class="nc" id="L96">            index.insert(newEntry);</span>
+        }
+<span class="nc" id="L98">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
